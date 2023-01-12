@@ -1,0 +1,13 @@
+[id$="_code"] {
+    width: 110px;
+}
+
+[id$="_marks"] {
+    width: 70px;
+}
+
+.form-photo{
+    height: 200px;
+    width: 200px;
+    margin-bottom: 10px;
+}

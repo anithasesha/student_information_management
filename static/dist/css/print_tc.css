@@ -1,0 +1,55 @@
+.bmc-logo{
+    height: 40px;
+    margin-bottom: 5px;
+}
+
+.tc-header{
+    font-size: 22px;
+    margin-left: 10px;
+    margin-top: 5px;
+    text-transform: uppercase;
+    /* font-weight: bold; */
+    text-align: center;
+}
+
+.tc-wrapper{
+    margin-top: 10px;
+}
+
+.tc-form{
+    /* font-weight: bold; */
+    font-size: 18px;
+}
+
+.tc-row{
+    margin: 20px 50px;
+}
+
+.left-items{
+    width: 57%;
+    display: inline-block;
+}
+
+.right-items{
+    display: inline-block;
+}
+
+.bullet{
+    display: inline-block;
+    float: left;
+    margin-right: 15px;
+}
+
+.tc-field{
+    display: inline-block;
+}
+
+.print-button-wrapper{
+    margin-bottom: 50px;
+}
+
+.print-button{
+    width: 100px;
+    display: table;
+    margin: 0 auto;
+}

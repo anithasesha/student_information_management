@@ -1,0 +1,92 @@
+                    <form role="form" method="POST" action="{{ action_path }}" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        
+                                {% comment %} Display Messages {% endcomment %}
+                                {% if messages %}
+                                <div class="form-group">
+                                <div class="col-12">
+                                    {% for message in messages %}
+                                    {% if message.tags == "error" %}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% elif message.tags == "success" %}
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                                </div>
+                                {% endif %}
+
+                        <div class="card-body">
+                            
+                            {% comment %} Adding Form with All inputs Here {% endcomment %}
+                            {% for field in form %}
+                              {% if field.name == 'student_photo' or field.name == 'family_photo' %}
+                                <div class="form-group">
+                                  {{ field.label_tag }}
+                                  {% if action_path == '/edit_student_save/' %}
+                                    <br><img class="form-photo" src="{{field.value}}"><br>
+                                    Change:
+                                  {% endif %}
+                                  <input type="file" name="{{field.name}}" accept="image/*" id="id_{{field.name}}">
+                                </div>
+                              {% else %}
+                                <div class="form-group">
+                                  {{ field.errors }}
+                                  {{ field.label_tag }}
+                                  {{ field }}
+                                </div>
+                              {% endif %}
+
+                            {% endfor %%}
+
+                            <!-- {{ formset.as_ul }} -->
+
+                            {{ formset.management_form }}
+                            {{ formset.non_form_errors.as_ul }}
+                            <table id="formset" class="form">
+                            {% for form in formset.forms %}
+                              {% if forloop.first %}
+                              <thead>
+                                <tr>
+                                {% for field in form.visible_fields %}
+                                <th>
+                                  {{ field.label|capfirst }}
+                                </th>
+                                {% endfor %}
+                                </tr>
+                              </thead>
+                              {% endif %}
+                              <tr>
+                              {% for field in form.visible_fields %}
+                                <td>
+                                {# Include the hidden fields in the form #}
+                                {% if forloop.first %}
+                                  {% for hidden in form.hidden_fields %}
+                                  {{ hidden }}
+                                  {% endfor %}
+                                {% endif %}
+                                  {{ field.errors.as_ul }}
+                                  {{ field }}
+                                </td>
+                              {% endfor %}
+                              </tr>
+                            {% endfor %}
+                            </table>
+
+                        </div>
+
+                        <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">{{ button_text }}</button>
+                        </div>
+                    </form>
