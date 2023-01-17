@@ -55,29 +55,3 @@ class StudentMarks(models.Model):
     allied_practical_subject_code = models.CharField(max_length=20,null=True,blank=True)
     allied_practical_marks = models.FloatField(null=True,blank=True)
     objects = models.Manager()
-
-        
-
-#Creating Django Signals
-
-# It's like trigger in database. It will run only when Data is Added in CustomUser model
-
-# @receiver(post_save, sender=StudentDetails)
-# # Now Creating a Function which will automatically insert data in HOD, Staff or Student
-# def create_user_profile(sender, instance, created, **kwargs):
-#     # if Created is true (Means Data Inserted)
-#     if created:
-#         StudentDetails.objects.create(admin=instance, course_id=1, session_year_id=1, address="", profile_pic="", gender="")
-    
-
-# @receiver(post_save, sender=StudentDetails)
-# def save_user_profile(sender, instance, **kwargs):
-#     if instance.user_type == 1:
-#         instance.adminhod.save()
-#     if instance.user_type == 2:
-#         instance.staffs.save()
-#     if instance.user_type == 3:
-#         instance.students.save()
-    
-
-
