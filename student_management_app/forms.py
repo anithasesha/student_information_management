@@ -35,6 +35,6 @@ class EditStudentForm(forms.ModelForm):
     field_order = ['student_photo']
 
     def __init__(self, *args, **kwargs):
-        super(AddStudentForm, self).__init__(*args, **kwargs)
+        super(EditStudentForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
