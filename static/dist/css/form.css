@@ -1,8 +1,12 @@
-[id$="_code"] {
+[id$="_subject_code"] {
     width: 110px;
 }
 
 [id$="_marks"] {
+    width: 70px;
+}
+
+[id$="-semester"] {
     width: 70px;
 }
 
