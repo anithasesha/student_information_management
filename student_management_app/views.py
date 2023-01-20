@@ -7,8 +7,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
 from student_management_app.models import StudentDetails, StudentMarks
-from .forms import AddStudentForm, EditStudentForm
+from .forms import AddStudentForm, EditStudentForm, StudentDetailsTable
 from django.forms import modelformset_factory,modelform_factory, inlineformset_factory
+from django.shortcuts import render
 
 
 def home(request):
@@ -16,7 +17,10 @@ def home(request):
     context = {
         "students": students
     }
-    return render(request, 'home_template.html', context)
+    # return render(request, 'home_template.html', context)
+    table = StudentDetailsTable(StudentDetails.objects.all())
+    return render(request, 'mytemplate.html', {'table': table})
+
 
 
 def add_student(request):

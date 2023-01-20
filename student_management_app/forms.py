@@ -3,6 +3,7 @@ from django.forms import Form
 from django.forms import formset_factory
 from .models import StudentMarks, StudentDetails
 from django.forms import ModelForm
+import django_tables2 as tables
 
 class DateInput(forms.DateInput):
     input_type = "date"
@@ -38,3 +39,10 @@ class EditStudentForm(forms.ModelForm):
         super(EditStudentForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+
+
+class StudentDetailsTable(tables.Table):
+    class Meta:
+        model = StudentDetails
+        fields = ('register_number',)        
+        template_name = 'django_tables2/bootstrap4.html'
