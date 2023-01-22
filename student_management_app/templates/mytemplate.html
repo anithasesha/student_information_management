@@ -1,6 +1,88 @@
-{% load django_tables2 %}
-{% load render_table from django_tables2 %}
+{% extends 'base_template.html' %}
 
-<table>
-    {% render_table table %}
-</table>
+{% block page_title %}
+    Manage Student
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+        <div class="container-fluid">
+
+            <a class="btn btn-primary" href="{% url 'add_student' %}" role="button">+ Add Student</a> <br/>&nbsp;
+            
+            {% if messages %}
+                                <div class="form-group">
+                                <div class="col-12">
+                                    {% for message in messages %}
+                                    {% if message.tags == "error" %}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% elif message.tags == "success" %}
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                                </div>
+                                {% endif %}
+
+            <div class="row">
+
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Student Details</h3>
+
+                            <div class="card-tools">
+                            <div class="input-group input-group-sm" style="width: 150px;">
+                                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                                <div class="input-group-append">
+                                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
+                        {% load render_table from django_tables2 %}
+                        {% render_table table %}
+
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if table.page.has_previous %}
+                                    <a href="?{{ table.request.GET.urlencode }}&amp;page={{ table.page.previous_page_number }}">previous</a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ table.page.number }} of {{ table.page.paginator.num_pages }}.
+                                </span>
+
+                                {% if table.page.has_next %}
+                                    <a href="?{{ table.request.GET.urlencode }}&amp;page={{ table.page.next_page_number }}">next</a>
+                                {% endif %}
+                            </span>
+                        </div>
+
+
+                        </div>
+                    <!-- /.card -->
+
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+
+  {% endblock main_content %}

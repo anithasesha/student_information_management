@@ -1,6 +1,7 @@
 
 from django.urls import path, include
 from . import views, LoginViews
+from .views import StudentDetailsFilterView
 
 urlpatterns = [
     path('', LoginViews.loginPage, name="login"),
@@ -17,4 +18,5 @@ urlpatterns = [
     path('print_tc/<student_id>/', views.print_tc, name="print_tc"),
     path('admin_profile/', LoginViews.admin_profile, name="admin_profile"),
     path('admin_profile_update/', LoginViews.admin_profile_update, name="admin_profile_update"),
+    path('students/', StudentDetailsFilterView.as_view(), name='student_list')
 ]

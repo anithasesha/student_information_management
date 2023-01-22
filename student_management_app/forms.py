@@ -4,6 +4,11 @@ from django.forms import formset_factory
 from .models import StudentMarks, StudentDetails
 from django.forms import ModelForm
 import django_tables2 as tables
+from django_filters.views import FilterView
+from django_tables2.views import SingleTableMixin
+import django_filters
+from django_tables2 import Column
+from django.utils.safestring import mark_safe
 
 class DateInput(forms.DateInput):
     input_type = "date"
@@ -41,8 +46,26 @@ class EditStudentForm(forms.ModelForm):
             visible.field.widget.attrs['class'] = 'form-control'
 
 
+class StudentLinkColumn(Column):
+    def render(self, value, record):
+        return mark_safe(f'<a href="/edit_student/{record.register_number}">{value}</a>')
+
+
+class ImageColumn(Column):
+
+    def render(self, value, record):
+        return mark_safe(f'<img src="{record.student_photo}" style="width: 50px;" />')
+
 class StudentDetailsTable(tables.Table):
+    name = StudentLinkColumn()
+    student_photo = ImageColumn()
     class Meta:
         model = StudentDetails
-        fields = ('register_number',)        
-        template_name = 'django_tables2/bootstrap4.html'
+        fields = ('student_photo','register_number','name','gender','course','mail_id','caste',)
+        template_name = 'django_tables2/bootstrap.html'
+
+
+class StudentDetailsFilter(django_filters.FilterSet):
+    class Meta:
+        model = StudentDetails
+        fields = ['register_number', 'name', 'caste']
