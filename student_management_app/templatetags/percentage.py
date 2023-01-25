@@ -33,6 +33,8 @@ def sem_percentage(value):
     percentage = None
     if i != 0:
         percentage = total/i
+        percentage = round(percentage,1)
+
 
     return percentage
 
@@ -54,4 +56,6 @@ def overall_percentage(id, semester):
     overall_percent = None
     if i != 0:
         overall_percent = total_percent/i
+        overall_percent = round(overall_percent,1)
+
     return overall_percent

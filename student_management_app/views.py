@@ -110,7 +110,7 @@ def add_student_save(request):
                             instance.save()
 
                 messages.success(request, "Student Added Successfully!")
-                return redirect('add_student')
+                return redirect('view_student', student.register_number)
             except Exception as e: 
                 messages.error(request, "Failed to Add Student!")
                 return redirect('add_student')
@@ -166,7 +166,7 @@ def edit_student(request, student_id):
     return render(request, "edit_student_template.html", context)
 
 
-def edit_student_save(request):
+def edit_student_save(request, student_id):
     if request.method != "POST":
         return HttpResponse("Invalid Method!")
     else:
@@ -238,7 +238,7 @@ def edit_student_save(request):
                 del request.session['student_id']
 
                 messages.success(request, "Student Updated Successfully!")
-                return redirect('/edit_student/'+student_id)
+                return redirect('view_student', student.register_number)
             except Exception as e: 
                 messages.error(request, "Failed to Update Student.")
                 return redirect('/edit_student/'+student_id)
