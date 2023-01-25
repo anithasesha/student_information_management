@@ -9,6 +9,8 @@ from django_tables2.views import SingleTableMixin
 import django_filters
 from django_tables2 import Column
 from django.utils.safestring import mark_safe
+from django.utils.html import format_html
+from django.urls import reverse
 
 class DateInput(forms.DateInput):
     input_type = "date"
@@ -45,27 +47,20 @@ class EditStudentForm(forms.ModelForm):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 
-
-class StudentLinkColumn(Column):
-    def render(self, value, record):
-        return mark_safe(f'<a href="/edit_student/{record.register_number}">{value}</a>')
-
-
-class ImageColumn(Column):
-
-    def render(self, value, record):
-        return mark_safe(f'<img src="{record.student_photo}" style="width: 50px;" />')
-
 class StudentDetailsTable(tables.Table):
-    name = StudentLinkColumn()
-    student_photo = ImageColumn()
+    action = tables.Column(empty_values=())
+    
     class Meta:
         model = StudentDetails
         fields = ('student_photo','register_number','name','gender','course','mail_id','caste',)
         template_name = 'django_tables2/bootstrap.html'
+    
+    def render_student_photo(self, value, record):
+        return format_html('<img src="{}" style="width: 50px;" />', record.student_photo)
+        
+    def render_name(self, value, record):
+        return format_html('<a href="{}">{}</a>', reverse('view_student', args=[record.register_number]), value)
 
+    def render_action(self, value, record):
+        return format_html('<a href="{}"><img src="/static/admin/img/edit.png" style="height: 25px;width: 25px;"></a><a href="{}"><img src="/static/admin/img/print.png" style="height: 25px;width: 25px;"></a><a href="{}"><img src="/static/admin/img/delete.png" style="height: 25px;width: 25px;"></a>', reverse('edit_student', args=[record.register_number]),reverse('print_tc', args=[record.register_number]),reverse('delete_student', args=[record.register_number]))
 
-class StudentDetailsFilter(django_filters.FilterSet):
-    class Meta:
-        model = StudentDetails
-        fields = ['register_number', 'name', 'caste']

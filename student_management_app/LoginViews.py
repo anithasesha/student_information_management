@@ -8,8 +8,10 @@ from student_management_app.EmailBackEnd import EmailBackEnd
 
 
 def loginPage(request):
-    if User.objects.count() == 0:
-        User.objects.create_user(username='admin', password='admin', email='admin@gmail.com', first_name='admin', last_name='')
+    user = request.user
+    if user.is_authenticated:
+        return redirect("students")
+    
     return render(request, 'login.html')
 
 
@@ -21,7 +23,7 @@ def doLogin(request):
         user = EmailBackEnd.authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
         if user != None:
             login(request, user)
-            return redirect('home')
+            return redirect('students')
         else:
             messages.error(request, "Invalid Login Credentials!")
             #return HttpResponseRedirect("/")

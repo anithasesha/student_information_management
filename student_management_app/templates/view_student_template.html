@@ -1,0 +1,80 @@
+{% extends 'base_template.html' %}
+
+{% block page_title %}
+    Student | Name: {{ name }} | #Reg. No : {{ student.id }}
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Student Information</h3>
+                    </div>
+                    <!-- /.card-header -->
+
+                        <div class="card-body">
+                            {% for field in student %}
+                                <b>{{ field.label }}:</b> {{ field.data }} <br>
+                            {% endfor %}
+
+                            {% load percentage %}
+                            {{ studentmarks.management_form }}
+                            {{ studentmarks.non_form_errors.as_ul }}
+                            <table id="studentmarks" class="form">
+                            {% for form in studentmarks.forms %}
+                              {% if forloop.first %}
+                              <thead>
+                                <tr>
+                                {% for field in form.visible_fields %}
+                                <th>
+                                  {{ field.label|capfirst }}
+                                </th>
+                                {% endfor %}
+                                <th>Percentage</th>
+                                <th>Overall Percentage</th>
+                                </tr>
+                              </thead>
+                              {% endif %}
+                              <tr>
+                              {% for field in form.visible_fields %}
+                                <td>
+                                {# Include the hidden fields in the form #}
+                                {% if forloop.first %}
+                                  {% for hidden in form.hidden_fields %}
+                                  {{ hidden }}
+                                  {% endfor %}
+                                {% endif %}
+                                  {{ field.errors.as_ul }}
+                                  {% if field.value %}
+                                  {{ field.value }}
+                                  {% endif %}
+                                </td>
+                              {% endfor %}
+                              <td>
+                                {{ form|sem_percentage }}
+                              </td>
+                              <td>
+
+                              </td>
+                              </tr>
+                            {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+
+  {% endblock main_content %}

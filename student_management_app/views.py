@@ -7,68 +7,36 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
 from student_management_app.models import StudentDetails, StudentMarks
-from .forms import AddStudentForm, EditStudentForm, StudentDetailsTable, StudentDetailsFilter
+from .forms import AddStudentForm, EditStudentForm, StudentDetailsTable
 from django.forms import modelformset_factory,modelform_factory, inlineformset_factory
 from django.shortcuts import render
 from django_tables2 import RequestConfig
 from django_filters.views import FilterView
+from django.forms.models import model_to_dict
 
 
-def home(request):
-    students = StudentDetails.objects.all()
-    context = {
-        "students": students
-    }
-    # return render(request, 'home_template.html', context)
+def students(request):
     table = StudentDetailsTable(StudentDetails.objects.all())
-    RequestConfig(request).configure(table)
     context = {
         'table': table,
     }
-    return render(request, 'mytemplate.html', context)
+    return render(request, 'students_list_template.html', context)
 
 
+def view_student(request, student_id):
+    student = StudentDetails.objects.get(register_number=student_id)
+    studentForm = AddStudentForm(data=model_to_dict(student))
+    studentMarksFormset = inlineformset_factory(StudentDetails, StudentMarks, exclude=('id','student_id',),extra=0, can_delete=False)
+    marksFormset = studentMarksFormset(instance=student)
 
-# class StudentDetailsFilterView(FilterView):
-#     filterset_class = StudentDetailsFilter
-#     template_name = 'mytemplate.html'
-#     table_class = StudentDetails
-
-#     def get(self, request, *args, **kwargs):
-#         self.table = self.table_class(self.filterset.qs)
-#         RequestConfig(request, paginate={'per_page': 20}).configure(self.table)
-#         return super().get(request, *args, **kwargs)
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['table'] = self.table
-#         return context
-
-class StudentDetailsFilterView(FilterView):
-    filterset_class = StudentDetailsFilter
-    template_name = 'mytemplate.html'
-    table_class = StudentDetailsTable
-    queryset = StudentDetails.objects.all()
-    # model = StudentDetails
-
-    # def get_queryset(self):
-    #     return StudentDetails.objects.filter(self.request.GET)
-
-    def get(self, request, *args, **kwargs):
-        self.table = self.table_class(self.get_queryset())
-        # self.table = self.table_class(self.filterset.qs)
-        RequestConfig(request, paginate={'per_page': 20}).configure(self.table)
-        return super().get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['table'] = self.table
-        return context
-
-
-# class StudentDetailsFilterView(FilterView):
-#     filterset_class = StudentDetailsFilter
-#     template_name = 'mytemplate.html'
+    context = {
+        "id": student_id,
+        "name": student.name,
+        "student": studentForm,
+        "studentmarks": marksFormset
+        
+    }
+    return render(request, 'view_student_template.html', context)
 
 
 def add_student(request):
