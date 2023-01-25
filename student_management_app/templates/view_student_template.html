@@ -1,7 +1,7 @@
 {% extends 'base_template.html' %}
 
 {% block page_title %}
-    Student | Name: {{ name }} | #Reg. No : {{ student.id }}
+    Student | Name: {{ name }} | #Reg. No : {{ id }}
 {% endblock page_title %}
 
 {% block main_content %}
@@ -17,6 +17,7 @@
                     <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title">Student Information</h3>
+                        <a class="btn btn-default" role="button" style="color: #007bff;float: right;" href="{% url 'edit_student' student_id=id %}">Edit</a>
                     </div>
                     <!-- /.card-header -->
 
@@ -59,10 +60,16 @@
                                 </td>
                               {% endfor %}
                               <td>
-                                {{ form|sem_percentage }}
+                                {% if form.instance|sem_percentage %}
+                                  {{ form.instance|sem_percentage }}
+                                {% endif %}
                               </td>
                               <td>
-
+                                {% for field in form.visible_fields %}
+                                  {% if field.label == 'Semester' and id|overall_percentage:field.value %}
+                                  {{ id|overall_percentage:field.value }}
+                                  {% endif %}
+                                {% endfor %}
                               </td>
                               </tr>
                             {% endfor %}

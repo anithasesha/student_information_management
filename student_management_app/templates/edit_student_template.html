@@ -22,7 +22,7 @@
                     <!-- form start -->
                     {% comment %} Displaying the Django Form using forms.py EditStudentForm {% endcomment %}
                     {% url 'edit_student_save' as action_path %}
-                    {% include 'form_template.html' with messages=messages form=form action_path=action_path button_text="Update Student" %}
+                    {% include 'form_template.html' with messages=messages form=form action_path=action_path button_text="Save" %}
 
                     </div>
                     <!-- /.card -->
