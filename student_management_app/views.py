@@ -6,8 +6,8 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
-from student_management_app.models import StudentDetails, StudentMarks
-from .forms import AddStudentForm, EditStudentForm, StudentDetailsTable
+from student_management_app.models import *
+from .forms import *
 from django.forms import modelformset_factory,modelform_factory, inlineformset_factory
 from django.shortcuts import render
 from django_tables2 import RequestConfig
@@ -15,10 +15,18 @@ from django_filters.views import FilterView
 from django.forms.models import model_to_dict
 
 
+class StudentsFilter(django_filters.FilterSet):
+    class Meta:
+        model = StudentDetails
+        fields = ('register_number','name','gender','caste','community','religion',)
+
 def students(request):
-    table = StudentDetailsTable(StudentDetails.objects.all())
+    tableFilter = StudentsFilter(request.GET, queryset=StudentDetails.objects.all())
+    table = StudentDetailsTable(tableFilter.qs)
+    # table = StudentDetailsTable(StudentDetails.objects.all())
     context = {
         'table': table,
+        'tableFilter': tableFilter
     }
     return render(request, 'students_list_template.html', context)
 
