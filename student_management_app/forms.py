@@ -25,6 +25,8 @@ class AddStudentForm(forms.ModelForm):
             'date_of_joining': DateInput(),
         }
 
+    field_order = ['student_photo']
+    
     def __init__(self, *args, **kwargs):
         super(AddStudentForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():

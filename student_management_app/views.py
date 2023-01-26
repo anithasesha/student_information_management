@@ -33,8 +33,9 @@ def view_student(request, student_id):
         "id": student_id,
         "name": student.name,
         "student": studentForm,
-        "studentmarks": marksFormset
-        
+        "studentmarks": marksFormset,
+        "student_photo":student.student_photo,
+        "family_photo":student.family_photo
     }
     return render(request, 'view_student_template.html', context)
 
@@ -172,7 +173,7 @@ def edit_student_save(request, student_id):
     else:
         student_id = request.session.get('student_id')
         if student_id == None:
-            return redirect('/home')
+            return redirect('students')
 
         form = EditStudentForm(request.POST, request.FILES)
         form.fields['student_photo'].required = False
@@ -241,9 +242,9 @@ def edit_student_save(request, student_id):
                 return redirect('view_student', student.register_number)
             except Exception as e: 
                 messages.error(request, "Failed to Update Student.")
-                return redirect('/edit_student/'+student_id)
+                return redirect('edit_student', student_id)
         else:
-            return redirect('/edit_student/'+student_id)
+            return redirect('edit_student',student_id)
 
 
 def delete_student(request, student_id):
@@ -251,10 +252,10 @@ def delete_student(request, student_id):
     try:
         student.delete()
         messages.success(request, "Student Deleted Successfully.")
-        return redirect('home')
+        return redirect('students')
     except:
         messages.error(request, "Failed to Delete Student.")
-        return redirect('home')
+        return redirect('students')
 
 
 def print_tc(request, student_id):

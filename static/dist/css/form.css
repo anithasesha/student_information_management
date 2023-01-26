@@ -35,3 +35,13 @@
 .fa-cog{
     color: rgba(0,0,0,.5);
 }
+
+.student_field_label{
+    width: 250px;
+}
+
+.view-header-buttons {
+    color: #007bff !important;
+    float: right;
+    margin-right: 5px;
+}

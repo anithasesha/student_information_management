@@ -16,8 +16,12 @@
                     <!-- general form elements -->
                     <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Student Information</h3>
-                        <a class="btn btn-default" role="button" style="color: #007bff;float: right;" href="{% url 'edit_student' student_id=id %}">Edit</a>
+                        <h3 class="card-title">Tutorial Register</h3>
+                        <div class="no-print">
+                          <a class="btn btn-default view-header-buttons" role="button" href="{% url 'print_tc' student_id=id %}">Print TC</a>
+                          <button class="btn btn-default view-header-buttons" onclick="printFunction()">Print Tutorial</button>
+                          <a class="btn btn-default view-header-buttons" role="button" href="{% url 'edit_student' student_id=id %}">Edit</a>
+                        </div>
                     </div>
                     <!-- /.card-header -->
 
@@ -48,13 +52,29 @@
 
                         <div class="card-body">
                             {% for field in student %}
-                                <b>{{ field.label }}:</b> {{ field.data }} <br>
+                            <table>
+                              <tr>
+                                <td class="student_field_label">
+                                  <b>{{ field.label }}:</b>
+                                </td>
+                                <td>
+                                  {% if field.name == 'student_photo' %}
+                                  <br><img class="form-photo" src="{{student_photo}}"><br>
+                                  {% elif field.name == 'family_photo' %}
+                                  <br><img class="form-photo" src="{{family_photo}}"><br>
+                                  {% else %}
+                                  <span> {{ field.data }} </span>
+                                  {% endif %}                                  
+                                </td>
+                              </tr>
+                            </table>
+                                <br>
                             {% endfor %}
 
                             {% load percentage %}
                             {{ studentmarks.management_form }}
                             {{ studentmarks.non_form_errors.as_ul }}
-                            <table id="studentmarks" class="form">
+                            <table id="studentmarks" class="form" BORDER="2">
                             {% for form in studentmarks.forms %}
                               {% if forloop.first %}
                               <thead>
@@ -109,4 +129,13 @@
         </div><!-- /.container-fluid -->
       </section>
 
+      <style type="text/css" media="print">
+        .no-print { display: none; }
+      </style>
+    
+      <script>
+        function printFunction() { 
+          window.print(); 
+        }
+      </script>
   {% endblock main_content %}
