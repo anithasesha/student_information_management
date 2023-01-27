@@ -37,11 +37,6 @@
 
                 <div class="col-md-12">
                     <!-- general form elements -->
-                    <h5><b>Filter By</b></h5>
-                    <form method="get">
-                        {{tableFilter.form}}
-                        <button class="btn btn-primary" style="margin-bottom: 10px;" type="submit">Search</button>
-                    </form>
 
                     <div class="card">
                         <div class="card-header">
@@ -49,24 +44,17 @@
                         </div>
 
                         {% load render_table from django_tables2 %}
-                        {% render_table table %}
 
-                        <div class="pagination">
-                            <span class="step-links">
-                                {% if table.page.has_previous %}
-                                    <a href="?{{ table.request.GET.urlencode }}&amp;page={{ table.page.previous_page_number }}">previous</a>
-                                {% endif %}
-
-                                <span class="current">
-                                    Page {{ table.page.number }} of {{ table.page.paginator.num_pages }}.
-                                </span>
-
-                                {% if table.page.has_next %}
-                                    <a href="?{{ table.request.GET.urlencode }}&amp;page={{ table.page.next_page_number }}">next</a>
-                                {% endif %}
-                            </span>
+                        <!-- display the filter -->
+                        <div class="filter-form">
+                            <form method="get">
+                                {{filter.form}}
+                                <button class="btn btn-primary" style="margin-bottom: 10px;" type="submit">Search</button>
+                            </form>
                         </div>
 
+                        <!-- display the table -->
+                        {% render_table table %}
 
                         </div>
                     <!-- /.card -->

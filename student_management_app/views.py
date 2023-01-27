@@ -2,33 +2,41 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage #To upload Profile Picture
-from django.urls import reverse
-from django.views.decorators.csrf import csrf_exempt
-from django.core import serializers
-import json
 from student_management_app.models import *
 from .forms import *
 from django.forms import modelformset_factory,modelform_factory, inlineformset_factory
 from django.shortcuts import render
-from django_tables2 import RequestConfig
 from django_filters.views import FilterView
 from django.forms.models import model_to_dict
+import django_filters
+from django_filters.views import FilterView
+from django_tables2 import SingleTableMixin
 
 
-class StudentsFilter(django_filters.FilterSet):
-    class Meta:
-        model = StudentDetails
-        fields = ('register_number','name','gender','caste','community','religion',)
+class FilteredSingleTableView(SingleTableMixin, FilterView):
+    formhelper_class = None
 
-def students(request):
-    tableFilter = StudentsFilter(request.GET, queryset=StudentDetails.objects.all())
-    table = StudentDetailsTable(tableFilter.qs)
-    # table = StudentDetailsTable(StudentDetails.objects.all())
-    context = {
-        'table': table,
-        'tableFilter': tableFilter
-    }
-    return render(request, 'students_list_template.html', context)
+    def get_filterset(self, filterset_class):
+        kwargs = self.get_filterset_kwargs(filterset_class)
+        filterset = filterset_class(**kwargs)
+        return filterset
+
+
+class StudentDetailsView(FilteredSingleTableView):
+    template_name = 'students_list_template.html'
+    table_class = StudentDetailsTable
+    paginate_by = 20
+    filterset_class = StudentsFilter
+
+    
+# def students(request):
+#     tableFilter = StudentsFilter(request.GET, queryset=StudentDetails.objects.all())
+#     table = StudentDetailsTable(tableFilter.qs)
+#     context = {
+#         'table': table,
+#         'tableFilter': tableFilter
+#     }
+#     return render(request, 'students_list_template.html', context)
 
 
 def view_student(request, student_id):

@@ -64,5 +64,10 @@ class StudentDetailsTable(tables.Table):
         return format_html('<a href="{}">{}</a>', reverse('view_student', args=[record.register_number]), value)
 
     def render_action(self, value, record):
-        return format_html('<a href="{}"><img src="/static/admin/img/edit.png" style="height: 25px;width: 25px;"></a><a href="{}"><img src="/static/admin/img/print.png" style="height: 25px;width: 25px;"></a><a href="{}"><img src="/static/admin/img/delete.png" style="height: 25px;width: 25px;"></a>', reverse('edit_student', args=[record.register_number]),reverse('print_tc', args=[record.register_number]),reverse('delete_student', args=[record.register_number]))
+        return format_html('<a href="{}" title="Edit Student"><img src="/static/admin/img/edit.png" style="height: 25px;width: 25px;"></a><a href="{}" title="Print TC"><img src="/static/admin/img/print.png" style="height: 25px;width: 25px;"></a><a href="{}" title="Delete Student"><img src="/static/admin/img/delete.png" style="height: 25px;width: 25px;"></a>', reverse('edit_student', args=[record.register_number]),reverse('print_tc', args=[record.register_number]),reverse('delete_student', args=[record.register_number]))
 
+
+class StudentsFilter(django_filters.FilterSet):
+    class Meta:
+        model = StudentDetails
+        fields = ('register_number','name','gender','course','caste',)
