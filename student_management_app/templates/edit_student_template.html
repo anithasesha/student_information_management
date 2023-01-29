@@ -17,12 +17,13 @@
                     <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title">Edit Student</h3>
+                        <a class="btn btn-default" role="button" style="color: #007bff;float: right;" href="{% url 'view_student' student_id=id %}">View</a>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
                     {% comment %} Displaying the Django Form using forms.py EditStudentForm {% endcomment %}
-                    {% url 'edit_student_save' as action_path %}
-                    {% include 'form_template.html' with messages=messages form=form action_path=action_path button_text="Update Student" %}
+                    {% url 'edit_student_save' student_id=id as action_path %}
+                    {% include 'form_template.html' with messages=messages form=form action_path=action_path button_text="Save" %}
 
                     </div>
                     <!-- /.card -->

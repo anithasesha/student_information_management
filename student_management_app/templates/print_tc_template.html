@@ -9,27 +9,26 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="{% static "fontawesome-free/css/all.min.css" %}">
+  <link rel="stylesheet" href="{% static 'fontawesome-free/css/all.min.css' %}">
   <!-- Ionicons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href="{% static 'dist/css/ionicons.min.css' %}">
   <!-- Tempusdominus Bbootstrap 4 -->
   <link rel="stylesheet" href="{% static 'tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
   <!-- iCheck -->
-  <link rel="stylesheet" href="{% static "icheck-bootstrap/icheck-bootstrap.min.css" %}">
+  <link rel="stylesheet" href="{% static 'icheck-bootstrap/icheck-bootstrap.min.css' %}">
   <!-- JQVMap -->
-  <link rel="stylesheet" href="{% static "jqvmap/jqvmap.min.css" %}">
+  <link rel="stylesheet" href="{% static 'jqvmap/jqvmap.min.css' %}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'dist/css/adminlte.css'  %}">
-
   <link rel="stylesheet" href="{% static 'dist/css/print_tc.css'  %}">
   <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="{% static "overlayScrollbars/css/OverlayScrollbars.min.css" %}">
+  <link rel="stylesheet" href="{% static 'overlayScrollbars/css/OverlayScrollbars.min.css' %}">
   <!-- Daterange picker -->
-  <link rel="stylesheet" href="{% static "daterangepicker/daterangepicker.css" %}">
+  <link rel="stylesheet" href="{% static 'daterangepicker/daterangepicker.css' %}">
   <!-- summernote -->
-  <link rel="stylesheet" href="{% static "summernote/summernote-bs4.css" %}">
+  <link rel="stylesheet" href="{% static 'summernote/summernote-bs4.css' %}">
   <!-- Google Font: Source Sans Pro -->
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'dist/css/fonts_family_Sans_Pro.css' %}">
 
     {% comment %} For Custom CSS {% endcomment %}
 
@@ -42,7 +41,9 @@
   <div class="wrapper">
 
     <div class="tc-header">
-        <img class="bmc-logo" src="/static/admin/img/bmclogo.png"/><br>
+        <img class="bmc-logo" src="/static/admin/img/bmclogo.png"/>
+        <a class="btn btn-primary no-print" role="button" style="position:absolute;right:20px;top: 10px;" href="{% url 'students' %}">Home</a>
+        <br>
         Bhaktavatsalam Memorial College for Women<br>
         NO.14, 31<sup style="top: -0.3em;font-size: 65%;">st</sup> Street, Periyar Nagar,<br>
         Korattur, Chennai-50
@@ -54,16 +55,24 @@
         <div class="tc-form">
             <div class="tc-row">
                 <div class="tc-cell left-items">
-                    S.No: 808
+                    S.No:
+                    <div style="display: inline-block;">
+                        <span class="input-display" id="serial_no_output"></span>
+                        <input name="serial-no" class="form-control no-print" style="width: 100px;display: inline-block;" id="serial_no">
+                    </div>
                 </div>
                 <div class="tc-cell right-items" style="margin-left: 80px;">
-                    Admission No: 2350
+                    Admission No: 
+                    <div style="display: inline-block;">
+                        <span class="input-display" id="admission_no_output"></span>
+                        <input name="admission-no" class="form-control no-print" style="width: 100px;display: inline-block;" id="admission_no">
+                    </div>
                 </div>
             </div>
 
             <div class="tc-row">
                 <div class="tc-cell left-items">
-                    Course: B.Sc. Computer Science
+                    Course: {{ studentDetails.course }}
                 </div>
                 <div class="tc-cell"></div>
             </div>
@@ -163,9 +172,28 @@
                     </div>
                 </div>
                 <div class="tc-cell right-items">
-                    Final Year<br><br>
-                    French<br>
-                    English
+                    <span class="input-display" id="left_year_question_output"></span>
+                    <select name="left-year-question" class="form-control no-print" id="left_year_question">
+                        <option value="Final Year">Final Year</option>
+                        <option value="First Year">First Year</option>
+                        <option value="Second Year">Second Year</option>
+                        <option value="Third Year">Third Year</option>
+                    </select>
+                    <br>
+                    <span class="input-display" id="lang_part_one_output"></span>
+                    <select name="lang-part-one" class="form-control no-print" id="lang_part_one">
+                        <option value="Tamil">Tamil</option>
+                        <option value="French">French</option>
+                        <option value="Sanskrit">Sanskrit</option>
+                        <option value="Telugu">Telugu</option>
+                        <option value="Hindi">Hindi</option>
+                    </select>
+
+                    <span class="input-display" id="medium_question_output"></span>
+                    <select name="medium-question" class="form-control no-print" id="medium_question">
+                        <option value="English">English</option>
+                        <option value="Tamil">Tamil</option>
+                    </select>
                 </div>
             </div>
 
@@ -174,7 +202,13 @@
                     <div class="bullet">8.</div>
                     <div class="tc-field">Whether the student has paid all the fee due to the college</div>
                 </div>
-                <div class="tc-cell right-items">Yes</div>
+                <div class="tc-cell right-items">
+                    <span class="input-display" id="paid_fess_question_output"></span>
+                    <select name="paid-fess-question" class="form-control no-print" id="paid_fess_question">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
             </div>
 
             <div class="tc-row">
@@ -182,7 +216,10 @@
                     <div class="bullet">9.</div>
                     <div class="tc-field">Date on which the student actually left the college</div>
                 </div>
-                <div class="tc-cell right-items">13/06/2022</div>
+                <div class="tc-cell right-items">
+                    <span class="input-display" id="college_left_date_output"></span>
+                    <input type="date" data-date-format="DD/MM/YYYY" name="college_left_date" class="form-control no-print" id="college_left_date">
+                </div>
             </div>
 
             <div class="tc-row">
@@ -190,7 +227,10 @@
                     <div class="bullet">10.</div>
                     <div class="tc-field">Conduct and Character</div>
                 </div>
-                <div class="tc-cell right-items">GOOD</div>
+                <div class="tc-cell right-items">
+                    <span class="input-display" id="conduct_character_output"></span>
+                    <input name="conduct-character" class="form-control no-print" id="conduct_character">
+                </div>
             </div>
 
             <div class="tc-row">
@@ -198,7 +238,10 @@
                     <div class="bullet">11.</div>
                     <div class="tc-field">Date on which application for Transfer certificate was made</div>
                 </div>
-                <div class="tc-cell right-items">13/06/2022</div>
+                <div class="tc-cell right-items">
+                    <span class="input-display" id="tc_made_date_output"></span>
+                    <input type="date" data-date-format="DD/MM/YYYY" name="tc_made_date" class="form-control no-print" id="tc_made_date">
+                </div>
             </div>
 
             <div class="tc-row">
@@ -206,7 +249,10 @@
                     <div class="bullet">12.</div>
                     <div class="tc-field">Date of Issue</div>
                 </div>
-                <div class="tc-cell right-items">15/07/2022</div>
+                <div class="tc-cell right-items">
+                    <span class="input-display" id="date_of_issue_output"></span>
+                    <input type="date" data-date-format="DD/MM/YYYY" name="date_of_issue" class="form-control no-print" id="date_of_issue">
+                </div>
             </div>
 
             <div class="tc-row">
@@ -245,44 +291,75 @@
     <button class="print-button btn btn-primary" onclick="printFunction()">Print TC</button>
   </div>
   
+  <style type="text/css">
+    .input-display {
+        display: none;
+    }
+  </style>
   <style type="text/css" media="print">
-    .no-print { display: none; }
+    .no-print { 
+        display: none; 
+    }
+
+    .input-display {
+        display: block;
+    }
   </style>
 
   <script>
-    function printFunction() { 
-      window.print(); 
+    function printFunction() {
+        var ids=["serial_no","admission_no","left_year_question","lang_part_one","medium_question","paid_fess_question","college_left_date","conduct_character","tc_made_date","date_of_issue"];
+        var all_value_present = true;
+        for (var i = 0; i < ids.length; ++i) {
+            if($("#"+ids[i]).val().length == 0){
+                all_value_present=false;
+            }
+
+            if(ids[i].indexOf('date') !== -1){
+                $("#"+ids[i]+"_output").html(moment($("#"+ids[i]).val(), "YYYY-MM-DD").format($("#"+ids[i]).attr("data-date-format")));
+            }
+            else{
+                $("#"+ids[i]+"_output").html($("#"+ids[i]).val());
+            }
+        }
+        
+        if(all_value_present == true){
+            window.print(); 
+        }
+        else{
+            alert("Please fill all inputs.");
+        }        
     }
   </script>
 
 <!-- jQuery -->
-<script src="{% static "jquery/jquery.min.js"  %}"></script>
+<script src="{% static 'jquery/jquery.min.js'  %}"></script>
 <!-- jQuery UI 1.11.4 -->
-<script src="{% static "jquery-ui/jquery-ui.min.js"  %}"></script>
+<script src="{% static 'jquery-ui/jquery-ui.min.js'  %}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   $.widget.bridge('uibutton', $.ui.button)
 </script>
 <!-- Bootstrap 4 -->
-<script src="{% static "bootstrap/js/bootstrap.bundle.min.js"  %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.bundle.min.js'  %}"></script>
 <!-- ChartJS -->
-<script src="{% static "chart.js/Chart.min.js"  %}"></script>
+<script src="{% static 'chart.js/Chart.min.js'  %}"></script>
 <!-- Sparkline -->
-<script src="{% static "sparklines/sparkline.js"  %}"></script>
+<script src="{% static 'sparklines/sparkline.js'  %}"></script>
 <!-- JQVMap -->
-<script src="{% static "jqvmap/jquery.vmap.min.js"  %}"></script>
-<script src="{% static "jqvmap/maps/jquery.vmap.usa.js"  %}"></script>
+<script src="{% static 'jqvmap/jquery.vmap.min.js'  %}"></script>
+<script src="{% static 'jqvmap/maps/jquery.vmap.usa.js'  %}"></script>
 <!-- jQuery Knob Chart -->
-<script src="{% static "jquery-knob/jquery.knob.min.js"  %}"></script>
+<script src="{% static 'jquery-knob/jquery.knob.min.js'  %}"></script>
 <!-- daterangepicker -->
-<script src="{% static "moment/moment.min.js"  %}"></script>
-<script src="{% static "daterangepicker/daterangepicker.js"  %}"></script>
+<script src="{% static 'moment/moment.min.js'  %}"></script>
+<script src="{% static 'daterangepicker/daterangepicker.js' %}"></script>
 <!-- Tempusdominus Bootstrap 4 -->
-<script src="{% static "tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"  %}"></script>
+<script src="{% static 'tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js'  %}"></script>
 <!-- Summernote -->
-<script src="{% static "summernote/summernote-bs4.min.js"  %}"></script>
+<script src="{% static 'summernote/summernote-bs4.min.js' %}"></script>
 <!-- overlayScrollbars -->
-<script src="{% static "overlayScrollbars/js/jquery.overlayScrollbars.min.js"  %}"></script>
+<script src="{% static 'overlayScrollbars/js/jquery.overlayScrollbars.min.js'  %}"></script>
 <!-- AdminLTE App -->
 <script src="{% static 'dist/js/adminlte.js'  %}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->

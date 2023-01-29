@@ -2,25 +2,65 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage #To upload Profile Picture
-from django.urls import reverse
-from django.views.decorators.csrf import csrf_exempt
-from django.core import serializers
-import json
-from student_management_app.models import StudentDetails, StudentMarks
-from .forms import AddStudentForm, EditStudentForm
+from student_management_app.models import *
+from .forms import *
 from django.forms import modelformset_factory,modelform_factory, inlineformset_factory
+from django.shortcuts import render
+from django_filters.views import FilterView
+from django.forms.models import model_to_dict
+import django_filters
+from django_filters.views import FilterView
+from django_tables2 import SingleTableMixin
+from django.contrib.auth.models import User
 
 
-def home(request):
-    students = StudentDetails.objects.all()
+class FilteredSingleTableView(SingleTableMixin, FilterView):
+    formhelper_class = None
+
+    def get_filterset(self, filterset_class):
+        kwargs = self.get_filterset_kwargs(filterset_class)
+        filterset = filterset_class(**kwargs)
+        return filterset
+
+
+class StudentDetailsView(FilteredSingleTableView):
+    template_name = 'students_list_template.html'
+    table_class = StudentDetailsTable
+    paginate_by = 20
+    filterset_class = StudentsFilter
+
+    
+# def students(request):
+#     tableFilter = StudentsFilter(request.GET, queryset=StudentDetails.objects.all())
+#     table = StudentDetailsTable(tableFilter.qs)
+#     context = {
+#         'table': table,
+#         'tableFilter': tableFilter
+#     }
+#     return render(request, 'students_list_template.html', context)
+
+
+def view_student(request, student_id):
+    student = StudentDetails.objects.get(register_number=student_id)
+    studentForm = AddStudentForm(data=model_to_dict(student))
+    studentMarksFormset = inlineformset_factory(StudentDetails, StudentMarks, exclude=('id','student_id',),extra=0, can_delete=False)
+    marksFormset = studentMarksFormset(instance=student)
+
     context = {
-        "students": students
+        "id": student_id,
+        "name": student.name,
+        "student": studentForm,
+        "studentmarks": marksFormset,
+        "student_photo":student.student_photo,
+        "family_photo":student.family_photo,
+        "hide_print": request.user.is_superuser == False
     }
-    return render(request, 'home_template.html', context)
+    return render(request, 'view_student_template.html', context)
 
 
 def add_student(request):
     form = AddStudentForm()
+    
     studentMarksFormset = modelformset_factory(StudentMarks,exclude=('id','student_id',),extra=6, can_delete=False)
     markformset = studentMarksFormset(queryset=StudentMarks.objects.none(),initial=[{'semester': 1},{'semester': 2},{'semester': 3},{'semester': 4},{'semester': 5},{'semester': 6}])
     
@@ -78,6 +118,8 @@ def add_student_save(request):
                     bank_account_number = form.cleaned_data['bank_account_number'],
                     ifsc_code = form.cleaned_data['ifsc_code']
                 )
+                
+                user = User.objects.create_user(username=student.register_number, password=str(student.register_number), email=student.mail_id, first_name=student.name)
 
                 studentMarksFormset = modelformset_factory(StudentMarks,exclude=('id','student_id',), can_delete=False)
                 if request.method == 'POST':
@@ -89,7 +131,7 @@ def add_student_save(request):
                             instance.save()
 
                 messages.success(request, "Student Added Successfully!")
-                return redirect('add_student')
+                return redirect('view_student', student.register_number)
             except Exception as e: 
                 messages.error(request, "Failed to Add Student!")
                 return redirect('add_student')
@@ -145,13 +187,13 @@ def edit_student(request, student_id):
     return render(request, "edit_student_template.html", context)
 
 
-def edit_student_save(request):
+def edit_student_save(request, student_id):
     if request.method != "POST":
         return HttpResponse("Invalid Method!")
     else:
         student_id = request.session.get('student_id')
         if student_id == None:
-            return redirect('/home')
+            return redirect('students')
 
         form = EditStudentForm(request.POST, request.FILES)
         form.fields['student_photo'].required = False
@@ -207,6 +249,11 @@ def edit_student_save(request):
                 student.bank_account_number = form.cleaned_data['bank_account_number']
                 student.ifsc_code = form.cleaned_data['ifsc_code']
                 student.save()
+
+                user = User.objects.get(id=request.user.id)
+                user.email = student.mail_id
+                user.first_name = student.name
+                user.save()
                 
                 studentMarksFormset = inlineformset_factory(StudentDetails, StudentMarks, exclude=('id','student_id',),extra=0, can_delete=False)
                 marksFormset = studentMarksFormset(request.POST, request.FILES, instance=student)
@@ -217,12 +264,12 @@ def edit_student_save(request):
                 del request.session['student_id']
 
                 messages.success(request, "Student Updated Successfully!")
-                return redirect('/edit_student/'+student_id)
+                return redirect('view_student', student.register_number)
             except Exception as e: 
                 messages.error(request, "Failed to Update Student.")
-                return redirect('/edit_student/'+student_id)
+                return redirect('edit_student', student_id)
         else:
-            return redirect('/edit_student/'+student_id)
+            return redirect('edit_student',student_id)
 
 
 def delete_student(request, student_id):
@@ -230,10 +277,10 @@ def delete_student(request, student_id):
     try:
         student.delete()
         messages.success(request, "Student Deleted Successfully.")
-        return redirect('home')
+        return redirect('students')
     except:
         messages.error(request, "Failed to Delete Student.")
-        return redirect('home')
+        return redirect('students')
 
 
 def print_tc(request, student_id):

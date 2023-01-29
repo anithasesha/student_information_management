@@ -34,7 +34,7 @@
                               {% if field.name == 'student_photo' or field.name == 'family_photo' %}
                                 <div class="form-group">
                                   {{ field.label_tag }}
-                                  {% if action_path == '/edit_student_save/' %}
+                                  {% if "edit/save" in action_path %}
                                     <br><img class="form-photo" src="{{field.value}}"><br>
                                     Change:
                                   {% endif %}
@@ -42,7 +42,7 @@
                                 </div>
                               {% else %}
                                 <div class="form-group">
-                                  {{ field.errors }}
+                                  {{ field.errors }}                                  
                                   {{ field.label_tag }}
                                   {{ field }}
                                 </div>
