@@ -11,6 +11,7 @@ from django.forms.models import model_to_dict
 import django_filters
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
+from django.contrib.auth.models import User
 
 
 class FilteredSingleTableView(SingleTableMixin, FilterView):
@@ -51,7 +52,8 @@ def view_student(request, student_id):
         "student": studentForm,
         "studentmarks": marksFormset,
         "student_photo":student.student_photo,
-        "family_photo":student.family_photo
+        "family_photo":student.family_photo,
+        "hide_print": request.user.is_superuser == False
     }
     return render(request, 'view_student_template.html', context)
 
@@ -116,6 +118,8 @@ def add_student_save(request):
                     bank_account_number = form.cleaned_data['bank_account_number'],
                     ifsc_code = form.cleaned_data['ifsc_code']
                 )
+                
+                user = User.objects.create_user(username=student.register_number, password=str(student.register_number), email=student.mail_id, first_name=student.name)
 
                 studentMarksFormset = modelformset_factory(StudentMarks,exclude=('id','student_id',), can_delete=False)
                 if request.method == 'POST':
@@ -245,6 +249,11 @@ def edit_student_save(request, student_id):
                 student.bank_account_number = form.cleaned_data['bank_account_number']
                 student.ifsc_code = form.cleaned_data['ifsc_code']
                 student.save()
+
+                user = User.objects.get(id=request.user.id)
+                user.email = student.mail_id
+                user.first_name = student.name
+                user.save()
                 
                 studentMarksFormset = inlineformset_factory(StudentDetails, StudentMarks, exclude=('id','student_id',),extra=0, can_delete=False)
                 marksFormset = studentMarksFormset(request.POST, request.FILES, instance=student)

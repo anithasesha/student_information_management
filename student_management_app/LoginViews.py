@@ -45,37 +45,35 @@ def logout_user(request):
 
 
 
-def admin_profile(request):
+def profile(request):
     user = User.objects.get(id=request.user.id)
 
     context={
         "user": user
     }
-    return render(request, 'admin_profile.html', context)
+    return render(request, 'profile.html', context)
 
 
-def admin_profile_update(request):
+def profile_update(request):
     if request.method != "POST":
         messages.error(request, "Invalid Method!")
-        return redirect('admin_profile')
+        return redirect('profile')
     else:
-        email = request.POST.get('email')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
         password = request.POST.get('password')
 
         try:
             customuser = User.objects.get(id=request.user.id)
-            customuser.email = email
-            customuser.first_name = first_name
-            customuser.last_name = last_name
+            if request.user.is_superuser == True:
+                customuser.email = request.POST.get('email')
+                customuser.first_name = request.POST.get('first_name')
+                customuser.last_name = request.POST.get('last_name')
             if password != None and password != "":
                 customuser.set_password(password)
             customuser.save()
             messages.success(request, "Profile Updated Successfully")
-            return redirect('admin_profile')
+            return redirect('profile')
         except:
             messages.error(request, "Failed to Update Profile")
-            return redirect('admin_profile')
+            return redirect('profile')
     
 

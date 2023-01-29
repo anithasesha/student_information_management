@@ -18,8 +18,10 @@
                     <div class="card-header">
                         <h3 class="card-title">Tutorial Register</h3>
                         <div class="no-print">
+                          {% if hide_print == False %}
                           <a class="btn btn-default view-header-buttons" role="button" href="{% url 'print_tc' student_id=id %}">Print TC</a>
                           <button class="btn btn-default view-header-buttons" onclick="printFunction()">Print Tutorial</button>
+                          {% endif %}
                           <a class="btn btn-default view-header-buttons" role="button" href="{% url 'edit_student' student_id=id %}">Edit</a>
                         </div>
                     </div>

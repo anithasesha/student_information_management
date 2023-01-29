@@ -18,6 +18,6 @@ urlpatterns = [
     path('students/<student_id>/edit/save/', views.edit_student_save, name="edit_student_save"),    
     path('students/<student_id>/delete/', views.delete_student, name="delete_student"),
     path('students/<student_id>/tc/', views.print_tc, name="print_tc"),
-    path('profile/', LoginViews.admin_profile, name="admin_profile"),
-    path('profile/update/', LoginViews.admin_profile_update, name="admin_profile_update"),
+    path('profile/', LoginViews.profile, name="profile"),
+    path('profile/update/', LoginViews.profile_update, name="profile_update"),
 ]
