@@ -8,12 +8,12 @@ def sem_percentage(value):
     marks = value
     total=0
     i=0
-    if marks.language_subject_code:
-        total += marks.language_marks
-        i+=1
-    if marks.english_subject_code:
-        total += marks.english_marks
-        i+=1
+    # if marks.language_subject_code:
+    #     total += marks.language_marks
+    #     i+=1
+    # if marks.english_subject_code:
+    #     total += marks.english_marks
+    #     i+=1
     if marks.major_subject_code:
         total += marks.major_marks
         i+=1
