@@ -285,7 +285,7 @@ def delete_student(request, student_id):
 
 def print_tc(request, student_id):
     student = StudentDetails.objects.get(register_number=student_id)
-    dob=student.date_of_joining.strftime("%d/%m/%Y")
+    dob=student.date_of_birth.strftime("%d/%m/%Y")
     dob_str = convert_date(dob)
     context = {
         "id": student_id,
