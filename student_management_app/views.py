@@ -109,7 +109,7 @@ def add_student_save(request):
                     student_photo = form.cleaned_data['student_photo'],
                     father_name = form.cleaned_data['father_name'],
                     mother_name = form.cleaned_data['mother_name'],
-                    father_occupation = form.cleaned_data['mother_name'],
+                    father_occupation = form.cleaned_data['father_occupation'],
                     mother_occupation = form.cleaned_data['mother_occupation'],
                     parent_phone_number = form.cleaned_data['parent_phone_number'],
                     parent_annual_income = form.cleaned_data['parent_annual_income'],
@@ -240,7 +240,7 @@ def edit_student_save(request, student_id):
                 student.student_photo = form.cleaned_data['student_photo']
                 student.father_name = form.cleaned_data['father_name']
                 student.mother_name = form.cleaned_data['mother_name']
-                student.father_occupation = form.cleaned_data['mother_name']
+                student.father_occupation = form.cleaned_data['father_occupation']
                 student.mother_occupation = form.cleaned_data['mother_occupation']
                 student.parent_phone_number = form.cleaned_data['parent_phone_number']
                 student.parent_annual_income = form.cleaned_data['parent_annual_income']
